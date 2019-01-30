@@ -3,6 +3,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <cstdio>
+#include <vector>
 using namespace std;
 class Extractor{
     private:
@@ -14,6 +15,7 @@ class Extractor{
         char extract();
         char extract(int position);
         int getPointer();
+        vector <string> extractWords();
 };
 Extractor::Extractor(string dirFile){
     this->file.open(dirFile,ios::in);
@@ -42,16 +44,43 @@ char Extractor::extract(int position){
 int Extractor::getPointer(){
     return this->pointer;
 }
-int main(){
-    Extractor ext("code.txt");
-    cout<<ext.extract(0)<<endl;
-    cout<<ext.extract(0)<<endl;
-    cout<<ext.extract(0)<<endl;
-    cout<<ext.extract(0)<<endl;
 
-    for (short i = 0; i < 18; i++) {
-        cout << ext.extract() << endl;
+// Generate a words vector
+vector <string> Extractor::extractWords() {
+    int c;
+    vector <string> words;
+    string aux = "";
+    // until the character read is different from null
+    while ((c = (int)extract())) {
+        // is it a char or number?
+        if((c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 48 && c <= 57)) {
+            aux += (char)c;
+        }
+        else {
+            if(aux != "") words.push_back(aux);
+            aux = "";
+        }
     }
 
-    cout << "Valor del puntero " << ext.getPointer() << endl;
+    return words;
+}
+
+int main() {
+    Extractor ext("code.txt");
+    vector <string> ans = ext.extractWords();
+    cout << ans.size() << endl;
+    for (unsigned int i = 0; i < ans.size(); i++) {
+        cout << ans[i] << endl;
+    }
+    // cout<<ext.extract(0)<<endl;
+    // cout<<ext.extract(0)<<endl;
+    // cout<<ext.extract(0)<<endl;
+    // cout<<ext.extract(0)<<endl;
+    //
+    // for (short i = 0; i < 100; i++) {
+    //     char c =  ext.extract();
+    //     cout << c << " " << (int)c << endl;
+    // }
+    //
+    // cout << "Valor del puntero " << ext.getPointer() << endl;
 }
