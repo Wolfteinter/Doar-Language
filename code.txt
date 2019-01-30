@@ -1,4 +1,4 @@
-int main(){
+int main() {
     cout<<"Hola"<<endl;
     return 0;
 }

@@ -48,23 +48,10 @@ int main(){
     cout<<ext.extract(0)<<endl;
     cout<<ext.extract(0)<<endl;
     cout<<ext.extract(0)<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.extract()<<endl;
-    cout<<ext.getPointer()<<endl;
+
+    for (short i = 0; i < 18; i++) {
+        cout << ext.extract() << endl;
+    }
+
+    cout << "Valor del puntero " << ext.getPointer() << endl;
 }
