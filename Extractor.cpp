@@ -1,3 +1,8 @@
+/*
+Compilar con g++ -std=c++11 Extractor -o prueba
+Es necesario que el code.txt este en el mismo directoerio
+*/
+
 #include <string>
 #include <iostream>
 #include <fstream>
