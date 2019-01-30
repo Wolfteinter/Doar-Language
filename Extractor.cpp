@@ -1,3 +1,17 @@
+/*
+Equipo = David Betancourt Montellano, Onder Francisco Campos Garcia
+Num. lista = 3 , 5
+Fecha = 30/1/2019
+Evidencia = Lectura caracter a caracter
+Nombre de Maestro = Karina Rodríguez Mejía
+Programa Académico = Ingeniería en sistemas computacionales
+Unidad de Aprendizaje = Compiladores
+
+
+Compilar con g++ -std=c++11 Extractor -o prueba
+Es necesario que el code.txt este en el mismo directoerio
+*/
+
 #include <string>
 #include <iostream>
 #include <fstream>
