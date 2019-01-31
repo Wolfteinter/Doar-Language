@@ -1,2 +1,26 @@
-Asignacion 
-=
+Tipos de datos:
+
+-int = entero
+-dec = decimal
+-bool = booleano
+-chr = caracter
+-str = cadena
+
+Operaciones (aritmeticas):
+
++ sumar
+- restar
+* multiplicar
+/ dividir
+% modulo
+** elevacion
+
+Operaciones (logicas):
+
+AND 
+OR
+NAND
+XOR
+XNOR
+XNAND
+NOT
