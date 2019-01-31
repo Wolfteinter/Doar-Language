@@ -17,6 +17,9 @@ Operaciones (aritmeticas):
 ! factorial
 || valor absoluto
 _/ raiz enesima
+++ incrementar
+-- disminuir
+
 
 Operaciones (logicas):
 
@@ -28,14 +31,31 @@ XNOR
 XNAND
 NOT
 
+Operacione logicas bit a bit:
+
+>> desplazar a la derecha 
+<< desplazar a la izquirda
+| or bit a bit
+& and bit a bit 
+^ xor bit  a bit
+
 Operaciones de relacion:
 
 == comparar
+!= diferente
 = asignar
 > mayor 
 < menor
 <= menor o igual
 >= mayor o igual
++=
+-=
+*=
+/=
+%=
+**=
+_/=
+
 
 Variables 
 
@@ -46,5 +66,10 @@ Contantes:
 [A-Z] ([A-z]|[0-9])*
 
 Funciones:
+def sumar(){
+  return a;
+}
+def int sumar(a,b){
+  return 0;
+}
 
-[a-z] ([a-z]|[A-z]|[0-9])*
