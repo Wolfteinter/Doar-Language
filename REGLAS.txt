@@ -1,10 +1,10 @@
 Tipos de datos:
 
--int = entero
--dec = decimal
--bool = booleano
--chr = caracter
--str = cadena
+int = entero
+dec = decimal
+bool = booleano
+chr = caracter
+str = cadena
 
 Operaciones (aritmeticas):
 
@@ -14,6 +14,9 @@ Operaciones (aritmeticas):
 / dividir
 % modulo
 ** elevacion
+! factorial
+|| valor absoluto
+_/ raiz enesima
 
 Operaciones (logicas):
 
@@ -24,3 +27,24 @@ XOR
 XNOR
 XNAND
 NOT
+
+Operaciones de relacion:
+
+== comparar
+= asignar
+> mayor 
+< menor
+<= menor o igual
+>= mayor o igual
+
+Variables 
+
+[a-z] ([a-z]|[A-z]|[0-9])*
+
+Contantes:
+
+[A-Z] ([A-z]|[0-9])*
+
+Funciones:
+
+[a-z] ([a-z]|[A-z]|[0-9])*
