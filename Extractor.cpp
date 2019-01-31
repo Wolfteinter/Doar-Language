@@ -60,6 +60,7 @@ int Extractor::getPointer(){
 }
 
 // Generate a words vector
+// ([a-z]|[A-Z]) (([a-z]|[A-Z]) | [0-9])^*
 vector <string> Extractor::extractWords() {
     int c;
     vector <string> words;
@@ -67,7 +68,7 @@ vector <string> Extractor::extractWords() {
     // until the character read is different from null
     while ((c = (int)extract())) {
         // is it a char or number?
-        if((c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 48 && c <= 57)) {
+        if((c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 48 && c <= 57) || (c == 46)) {
             aux += (char)c;
         }
         else {
@@ -82,7 +83,6 @@ vector <string> Extractor::extractWords() {
 int main() {
     Extractor ext("code.txt");
     vector <string> ans = ext.extractWords();
-    cout << ans.size() << endl;
     for (unsigned int i = 0; i < ans.size(); i++) {
         cout << ans[i] << endl;
     }
