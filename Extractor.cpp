@@ -1,12 +1,11 @@
 /*
 Equipo = David Betancourt Montellano, Onder Francisco Campos Garcia
-Num. lista = 3 , 5
-Fecha = 30/1/2019
-Evidencia = Lectura caracter a caracter
+Núm. lista = 3 , 5
+Fecha = 31/1/2019
+Evidencia = Expresiones regulares para extraer la cadenas
 Nombre de Maestro = Karina Rodríguez Mejía
 Programa Académico = Ingeniería en sistemas computacionales
 Unidad de Aprendizaje = Compiladores
-
 
 Compilar con g++ -std=c++11 Extractor -o prueba
 Es necesario que el code.txt este en el mismo directoerio
@@ -68,7 +67,7 @@ vector <string> Extractor::extractWords() {
     // until the character read is different from null
     while ((c = (int)extract())) {
         // is it a char or number?
-        if((c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 48 && c <= 57) || (c == 46)) {
+        if((c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 48 && c <= 57) || (c == 46) || (c == 45)) {
             aux += (char)c;
         }
         else {
