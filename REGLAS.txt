@@ -1,2 +1,75 @@
-Asignacion 
-=
+Tipos de datos:
+
+int = entero
+dec = decimal
+bool = booleano
+chr = caracter
+str = cadena
+
+Operaciones (aritmeticas):
+
++ sumar
+- restar
+* multiplicar
+/ dividir
+% modulo
+** elevacion
+! factorial
+|| valor absoluto
+_/ raiz enesima
+++ incrementar
+-- disminuir
+
+
+Operaciones (logicas):
+
+AND 
+OR
+NAND
+XOR
+XNOR
+XNAND
+NOT
+
+Operacione logicas bit a bit:
+
+>> desplazar a la derecha 
+<< desplazar a la izquirda
+| or bit a bit
+& and bit a bit 
+^ xor bit  a bit
+
+Operaciones de relacion:
+
+== comparar
+!= diferente
+= asignar
+> mayor 
+< menor
+<= menor o igual
+>= mayor o igual
++=
+-=
+*=
+/=
+%=
+**=
+_/=
+
+
+Variables 
+
+[a-z] ([a-z]|[A-z]|[0-9])*
+
+Contantes:
+
+[A-Z] ([A-z]|[0-9])*
+
+Funciones:
+def sumar(){
+  return a;
+}
+def int sumar(a,b){
+  return 0;
+}
+
