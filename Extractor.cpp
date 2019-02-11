@@ -28,7 +28,7 @@ class Extractor{
         char extract();
         char extract(int position);
         int getPointer();
-        vector <string> extractWords();
+        vector <string> extractTokens();
 };
 Extractor::Extractor(string dirFile){
     this->file.open(dirFile,ios::in);
@@ -60,28 +60,92 @@ int Extractor::getPointer(){
 
 // Generate a words vector
 // ([a-z]|[A-Z]) (([a-z]|[A-Z]) | [0-9])^*
-vector <string> Extractor::extractWords() {
-    int c;
-    vector <string> words;
+vector <string> Extractor::extractTokens() {
+    int c, sig;
+    vector <string> tokens;
     string aux = "";
     // until the character read is different from null
     while ((c = (int)extract())) {
         // is it a char or number?
-        if((c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 48 && c <= 57) || (c == 46) || (c == 45)) {
-            aux += (char)c;
+        if((c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 48 && c <= 57) || c == 46) {
+            sig = extract(getPointer());
+            if(c == 46 && (sig < 48 || sig > 57)) {
+                tokens.push_back(aux); // add token without point
+                tokens.push_back("."); // add point
+                this->pointer++; // increase pointer
+                aux = "";
+            }
+            else aux += (char)c;
         }
-        else {
-            if(aux != "") words.push_back(aux);
+        // plus 43, minus 45, greater 62, less 60, asterisc 42
+        else if(c == 43 || c == 45 || c == 62 || c == 60 || c == 42) {
+            if(aux != "") tokens.push_back(aux);
             aux = "";
+            sig = extract(getPointer());
+            if(sig == c || sig == 61) {
+                this->pointer++;
+                aux += (char)c;
+                aux += (char)sig;
+                tokens.push_back(aux);
+                aux = "";
+            }
+            else {
+                aux += (char)c;
+                tokens.push_back(aux);
+                aux = "";
+            }
+        }
+        // division 47, per cent 37, factorial 33, equal 61
+        else if(c == 47 || c == 37 || c == 33 || c == 61) {
+            if(aux != "") tokens.push_back(aux);
+            aux = "";
+            sig = extract(getPointer());
+            if(sig == 61) {
+                this->pointer++;
+                aux += (char)c;
+                aux += (char)sig;
+                tokens.push_back(aux);
+                aux = "";
+            }
+            else {
+                aux += (char)c;
+                tokens.push_back(aux);
+                aux = "";
+            }
+        }
+        // n-root
+        else if(c == 95) {
+            if(aux != "") tokens.push_back(aux);
+            aux = "";
+            sig = extract(getPointer());
+            if(sig == 47) {
+                this->pointer++;
+                aux += (char)c;
+                aux += (char)sig;
+                tokens.push_back(aux);
+                aux = "";
+            }
+            else {
+                aux += (char)c;
+                tokens.push_back(aux);
+                aux = "";
+            }
+        }
+        //
+        else {
+            if(aux != "") {
+                tokens.push_back(aux);
+                aux = "";
+            }
         }
     }
 
-    return words;
+    return tokens;
 }
 
 int main() {
     Extractor ext("code.txt");
-    vector <string> ans = ext.extractWords();
+    vector <string> ans = ext.extractTokens();
     for (unsigned int i = 0; i < ans.size(); i++) {
         cout << ans[i] << endl;
     }
