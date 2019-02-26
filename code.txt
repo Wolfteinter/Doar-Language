@@ -1,5 +1,5 @@
 // Single comment
-int main() {
+int def main() {
     a23 =- 20.5;
     A++;
     a+=5;

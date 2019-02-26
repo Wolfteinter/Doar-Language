@@ -31,21 +31,8 @@ class Extractor{
         vector <string> extractTokens();
 };
 Extractor::Extractor(string dirFile){
-     fstream fileAux;
-     fileAux.open(dirFile,ios::in);
-     char letter[1];
-     while(true){
-         fileAux.seekg(0,ios::cur);//auto increase
-         this->file.seekg(this->pointer);
-         this->file.read(letter,1);
-         if(letter[0] != 32){
-             cout<<(char)letter[0]<<endl;
-            this->file << (char)letter[0];
-         }
-         if(letter[0] == 0)
-             break;
-     }
-     this->pointer=0;
+    this->file.open(dirFile,ios::in);
+    this->pointer=0;
 }
 Extractor::~Extractor(){
     this->file.close();
@@ -80,91 +67,104 @@ vector <string> Extractor::extractTokens() {
     // until the character read is different from null
     while ((c = (int)extract())) {
         // is it a char or number?
-        if((c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 48 && c <= 57) || c == 46) {
-            sig = extract(getPointer());
-            if(c == 46 && (sig < 48 || sig > 57)) {
-                tokens.push_back(aux); // add token without point
-                tokens.push_back("."); // add point
-                this->pointer++; // increase pointer
-                aux = "";
+        cout<<c<<endl;
+        if(c != 10){
+            if((c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 48 && c <= 57) || c == 46){
+                sig = extract(getPointer());
+                if(c == 46 && (sig < 48 || sig > 57)) {
+                    tokens.push_back(aux); // add token without point
+                    tokens.push_back("."); // add point
+                    this->pointer++; // increase pointer
+                    aux = "";
+                }
+                else aux += (char)c;
             }
-            else aux += (char)c;
-        }
-        // plus 43, minus 45, greater 62, less 60, asterisc 42
-        else if(c == 43 || c == 45 || c == 62 || c == 60 || c == 42) {
-            if(aux != "") tokens.push_back(aux);
-            aux = "";
-            sig = extract(getPointer());
-            if(sig == c || sig == 61) {
-                this->pointer++;
-                aux += (char)c;
-                aux += (char)sig;
-                tokens.push_back(aux);
+            // plus 43, minus 45, greater 62, less 60, asterisc 42
+            else if(c == 43 || c == 45 || c == 62 || c == 60 || c == 42) {
+                if(aux != "") tokens.push_back(aux);
                 aux = "";
-            }
-            else {
-                aux += (char)c;
-                tokens.push_back(aux);
-                aux = "";
-            }
-        }
-        // division 47, per cent 37, factorial 33, equal 61
-        else if(c == 47 || c == 37 || c == 33 || c == 61) {
-            if(aux != "") tokens.push_back(aux);
-            aux = "";
-            sig = extract(getPointer());
-            if(sig == 61) {
-                this->pointer++;
-                aux += (char)c;
-                aux += (char)sig;
-                tokens.push_back(aux);
-                aux = "";
-            }
-            else {
-                aux += (char)c;
-                tokens.push_back(aux);
-                aux = "";
-            }
-        }
-        // n-root
-        else if(c == 95) {
-            if(aux != "") tokens.push_back(aux);
-            aux = "";
-            sig = extract(getPointer());
-            if(sig == 47) {
-                this->pointer++;
-                aux += (char)c;
-                aux += (char)sig;
-                tokens.push_back(aux);
-                aux = "";
-            }
-            else {
-                aux += (char)c;
-                tokens.push_back(aux);
-                aux = "";
-            }
-        }
-        else if(c==34 || c==39){
-            aux+=(char)c;
-            do{
-                c=(int)extract();
-                aux+=(char)c;
-            }while(c!=34 && c!=39);
-
-            tokens.push_back(aux);
-            aux = "";
-        }
-        //
-        else {
-            if(aux != "") {
-                tokens.push_back(aux);
-                aux = "";
-                if(c != 32){
-                    tokens.push_back(to_string((char)c));
+                sig = extract(getPointer());
+                if(sig == c || sig == 61) {
+                    this->pointer++;
+                    aux += (char)c;
+                    aux += (char)sig;
+                    tokens.push_back(aux);
+                    aux = "";
+                }
+                else {
+                    aux += (char)c;
+                    tokens.push_back(aux);
+                    aux = "";
                 }
             }
+            // division 47, per cent 37, factorial 33, equal 61
+            else if(c == 47 || c == 37 || c == 33 || c == 61) {
+                if(aux != "") tokens.push_back(aux);
+                aux = "";
+                sig = extract(getPointer());
+                if(sig == 61) {
+                    this->pointer++;
+                    aux += (char)c;
+                    aux += (char)sig;
+                    tokens.push_back(aux);
+                    aux = "";
+                }
+                else {
+                    aux += (char)c;
+                    tokens.push_back(aux);
+                    aux = "";
+                }
+            }
+            // n-root
+            else if(c == 95) {
+                if(aux != "") tokens.push_back(aux);
+                aux = "";
+                sig = extract(getPointer());
+                if(sig == 47) {
+                    this->pointer++;
+                    aux += (char)c;
+                    aux += (char)sig;
+                    tokens.push_back(aux);
+                    aux = "";
+                }
+                else {
+                    aux += (char)c;
+                    tokens.push_back(aux);
+                    aux = "";
+                }
+            }
+            else if(c==34 || c==39){
+                aux+=(char)c;
+                do{
+                    c=(int)extract();
+                    aux+=(char)c;
+                }while(c!=34 && c!=39);
 
+                tokens.push_back(aux);
+                aux = "";
+            }
+            //
+            else {
+                if(aux != "" ) {
+                    tokens.push_back(aux);
+                        aux = "";
+                    if(c != 32 ){
+                        aux+=(char)c;
+                        tokens.push_back(aux);
+                        aux = "";
+                    }
+                }else{
+                    if(c != 32 ){
+                        aux+=(char)c;
+                        tokens.push_back(aux);
+                        aux = "";
+                    }
+                }
+
+            }
         }
+
+        //cout<<aux<<endl;
     }
 
     return tokens;
