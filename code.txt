@@ -1,17 +1,19 @@
+
 int main() {
-    a23 = -20.5;
+    a23 =- 20.5;
     A++;
     a+=5;
     a<>b;
     a--;:
     a-=5;
     a <= 67
-    if(a==45)
+    Ite#Of(a==45)
     a**3;
     2_/34
     a != 34
     x %= 2;
     2 << 1;
-    cout<<"Hola"<<endl;
+    a="hola"
+    print("Hola#32.435543");
     return 0;
 }

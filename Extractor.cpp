@@ -31,8 +31,21 @@ class Extractor{
         vector <string> extractTokens();
 };
 Extractor::Extractor(string dirFile){
-    this->file.open(dirFile,ios::in);
-    this->pointer=0;
+     fstream fileAux;
+     fileAux.open(dirFile,ios::in);
+     char letter[1];
+     while(true){
+         fileAux.seekg(0,ios::cur);//auto increase
+         this->file.seekg(this->pointer);
+         this->file.read(letter,1);
+         if(letter[0] != 32){
+             cout<<(char)letter[0]<<endl;
+            this->file << (char)letter[0];
+         }
+         if(letter[0] == 0)
+             break;
+     }
+     this->pointer=0;
 }
 Extractor::~Extractor(){
     this->file.close();
@@ -131,18 +144,32 @@ vector <string> Extractor::extractTokens() {
                 aux = "";
             }
         }
+        else if(c==34 || c==39){
+            aux+=(char)c;
+            do{
+                c=(int)extract();
+                aux+=(char)c;
+            }while(c!=34 && c!=39);
+
+            tokens.push_back(aux);
+            aux = "";
+        }
         //
         else {
             if(aux != "") {
                 tokens.push_back(aux);
                 aux = "";
+                if(c != 32){
+                    tokens.push_back(to_string((char)c));
+                }
             }
+
         }
     }
 
     return tokens;
 }
-
+/*
 int main() {
     Extractor ext("code.txt");
     vector <string> ans = ext.extractTokens();
@@ -160,4 +187,4 @@ int main() {
     // }
     //
     // cout << "Valor del puntero " << ext.getPointer() << endl;
-}
+}*/
