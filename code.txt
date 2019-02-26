@@ -1,4 +1,4 @@
-
+// Single comment
 int main() {
     a23 =- 20.5;
     A++;
@@ -9,11 +9,22 @@ int main() {
     a <= 67
     Ite#Of(a==45)
     a**3;
+    /* hi!...
     2_/34
     a != 34
     x %= 2;
     2 << 1;
     a="hola"
-    print("Hola#32.435543");
+    print("Hola #32.435543 esto es un");
     return 0;
 }
+/* multiline comment
+adknajnad
+ad afj
+*/
+
+
+
+
+
+hello
