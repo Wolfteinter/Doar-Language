@@ -67,7 +67,7 @@ vector <string> Extractor::extractTokens() {
     // until the character read is different from null
     while ((c = (int)extract())) {
         // is it a char or number?
-        cout<<c<<endl;
+        cout << "";
         if(c != 10){
             if((c >= 65 && c <= 90) || (c >= 97 && c <= 122) || (c >= 48 && c <= 57) || c == 46){
                 sig = extract(getPointer());
@@ -163,8 +163,6 @@ vector <string> Extractor::extractTokens() {
 
             }
         }
-
-        //cout<<aux<<endl;
     }
 
     return tokens;

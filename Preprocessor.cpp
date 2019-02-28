@@ -78,7 +78,9 @@ string Preprocessor::preprocessFile(string dirFile) {
     return nameTemp;
 }
 
+/*
 int main() {
     cout << Preprocessor::preprocessFile("code.txt") << endl;
     return 0;
 }
+*/

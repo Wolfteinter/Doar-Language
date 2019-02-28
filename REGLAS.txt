@@ -1,13 +1,11 @@
 Tipos de datos:
-
 int = entero
 dec = decimal
 bool = booleano
 chr = caracter
 str = cadena
 
-Operaciones (aritmeticas):
-
+Operaciones (aritméticas):
 + sumar
 - restar
 * multiplicar
@@ -21,9 +19,8 @@ _/ raiz enesima
 -- disminuir
 
 
-Operaciones (logicas):
-
-AND 
+Operaciones (lógicas):
+AND
 OR
 NAND
 XOR
@@ -31,20 +28,18 @@ XNOR
 XNAND
 NOT
 
-Operacione logicas bit a bit:
-
->> desplazar a la derecha 
+Operaciones lógicas bit a bit:
+>> desplazar a la derecha
 << desplazar a la izquirda
 | or bit a bit
-& and bit a bit 
+& and bit a bit
 ^ xor bit  a bit
 
-Operaciones de relacion:
-
+Operaciones de relación:
 == comparar
 != diferente
 = asignar
-> mayor 
+> mayor
 < menor
 <= menor o igual
 >= mayor o igual
@@ -57,67 +52,17 @@ Operaciones de relacion:
 _/=
 
 
-Variables 
-
+Variables:
 [a-z] ([a-z]|[A-z]|[0-9])*
 
-Contantes:
-
+Constantes:
 [A-Z] ([A-z]|[0-9])*
 
 Funciones:
 def sumar(){
   return a;
 }
+
 def int sumar(a,b){
   return 0;
 }
-------------------------------
-+    43  ya
-
-+    43
-=    61
-----------
--    45 ya
-
--    45
-=    61
------------
-*    42 ya
-
-*    42
-=    61
-----------
-/    47 ya
-
-=    61
-----------
-%    37 ya
-
-=    61
----------
-!    33 ya
-
-=    61
---------
-_    95 ya
-
-/    95
------------
->    62 ya
-
->    62
-=    61
-----------
-<    60 ya
-
-<    60
-=    61
----------
-=    61
-
-=    61
-
-a
-<
->b

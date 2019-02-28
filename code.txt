@@ -9,7 +9,6 @@ int def main() {
     a <= 67
     Ite#Of(a==45)
     a**3;
-    /* hi!...
     2_/34
     a != 34
     x %= 2;
@@ -23,8 +22,12 @@ adknajnad
 ad afj
 */
 
+def bool aFunction() {
 
+}
 
+def bool Otherfunction() {
 
+}
 
 hello
