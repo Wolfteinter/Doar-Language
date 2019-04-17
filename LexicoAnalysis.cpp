@@ -41,7 +41,7 @@ vector<string> LexicoAnalysis::analysis(vector<string> tokens) {
     return errors;
 }
 
-bool LexicoAnalysis::isNumeric(string n){
+bool LexicoAnalysis::isNumeric(string n) {
     for(char s : n)
         if(!((s >= '0' && s <= '9') || s == '.'))
             return false;
@@ -51,7 +51,7 @@ bool LexicoAnalysis::isNumeric(string n){
 bool LexicoAnalysis::isIdentifier(string s){
     if(!(s[0] >= 'a' && s[0]<= 'z'))
         return false;
-    for(unsigned int i=1;i<s.length();i++)
+    for(unsigned int i = 1; i < s.length(); i++)
         if(!((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z') || (s[i] >='0' && s[i] <= '9')))
             return false;
     return true;

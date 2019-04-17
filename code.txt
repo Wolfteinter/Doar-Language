@@ -1,16 +1,15 @@
 // Single comment
 int def main() {
     a23 =- 20.5;
-    A++;
+    a++;
     a+=5;
     a<>b;
-    a--;:
+    a--;
     a-=5;
-    a <= 67
-    Ite#Of(a==45)
+    a <= 67;
     a**3;
-    2_/34
-    a != 34
+    2_/34;
+    a != 34;
     x %= 2;
     2 << 1;
     a="hola"
@@ -26,8 +25,6 @@ def bool aFunction() {
 
 }
 
-def bool Otherfunction() {
+def bool otherfunction() {
 
 }
-
-hello

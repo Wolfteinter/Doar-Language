@@ -11,7 +11,6 @@ Compilar con g++ -std=c++11 main.cpp -o main
 Para más información revisar 'Instructions.txt'.
 */
 
-
 #include "Extractor.cpp"
 #include "LexicoAnalysis.cpp"
 #include "Preprocessor.cpp"
