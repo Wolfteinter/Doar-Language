@@ -9,11 +9,12 @@ int def main() {
     a <= 67;
     a**3;
     2_/34;
-    a != 34;
+    a = 34;
     x %= 2;
     2 << 1;
     a="hola"
     print("Hola #32.435543 esto es un");
+    Llamar();
     return 0;
 }
 /* multiline comment
