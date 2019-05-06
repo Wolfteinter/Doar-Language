@@ -25,6 +25,9 @@ LexicoAnalysis::LexicoAnalysis(){
 vector<string> LexicoAnalysis::analysis(vector<string> tokens) {
     vector <string> errors;
     for(string token : tokens) {
+        cout<<token<<endl;
+    }
+    for(string token : tokens) {
         if(token[0] == '"' && token[token.size()-1] == '"') continue;
         if((find(symbolTable.begin(),symbolTable.end(),token) == symbolTable.end())){
             // Is it a valid identifier?

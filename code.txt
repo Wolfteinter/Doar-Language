@@ -1,6 +1,7 @@
 // Single comment
 int def main() {
     a23 =- 20.5;
+    int a,b,c,d;
     a++;
     a+=5;
     a<>b;
@@ -13,8 +14,11 @@ int def main() {
     x %= 2;
     2 << 1;
     a="hola"
+    if(a=="hola"){
+        hola();
+    }else if(a=="nohola"){noHola();}
     print("Hola #32.435543 esto es un");
-    Llamar();
+    llamar();
     return 0;
 }
 /* multiline comment
