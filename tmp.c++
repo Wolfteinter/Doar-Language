@@ -21,14 +21,15 @@ class Analyzer {
         void block();//David
         bool proposition();//David
         void expression();//David
-        bool condition();//David
-        void identifier();//Onder
-        void number();//Onder
-        void text();//Onder
-        void boolean();//Onder
-        void aux1();//Onder
-        void aux2();//Onder
-        void aux3();//Onder
+        void condition();//David
+        string sorter();//Onder Ready
+        bool isIdentifier(string word);//Onder Ready
+        bool isNumber(string word);//Onder Ready
+        bool isText(string word);//Onder Ready
+        bool isBoolean(string word);//Onder Ready
+        bool aux1();//Onder
+        bool aux2();//Onder
+        bool aux3();//Onder
         void aux4();//Onder
         void aux5();//Onder
         void aux6();//Onder
@@ -40,7 +41,7 @@ class Analyzer {
         void aux12();//Onder
         void aux13();//Onder
         void aux14();//Onder
-        void aux15();//Onder
+        bool aux15();//Onder
         void aux16();//Onder
         void aux17();//Onder
         void aux18();//David
@@ -514,28 +515,301 @@ bool Analyzer::aux37() {
     }
     return ans;
 }
+void aux1(){
+    this->cont++;
+    string str = getToken();
+    if(str=="const"){
+        if(aux2() && aux3() && aux4()){
+            this->cont++;
+            if(str == ";") aux1();
+            else reportError(3);
+        }
+    }else{
+        this->cont--;
+    }
+}
+bool aux2(){
+    this->cont++;
+    string str = getToken();
+    if(str == "int" || str == "dec" || str == "bool" || str == chr || str == "str") return true;
+    else{
+        reportError(4);
+        return false;
+    }
+}
+bool aux3(){
+    this->cont++;
+    string str = getToken();
+    bool ans = false;
+    if(sorter() == "identifier"){
+        this->cont++;
+        string str = getToken();
+        if(str=="="){
+            ans = true;
+        }
+    }
+    return ans;
+}
+bool aux4(){
+    this->cont++;
+    string word = sorter();
+    bool ans = false;
+    if(word == "number" || word == "boolean" || word == "text"){
+        ans = true;
+    }
+    return ans;
+}
+
+bool aux6(){
+    this->cont++;
+    if(sorter() == "identifier"){
+        aux8();
+        aux7();
+    }
+}
+void aux7(){
+    this->cont++;
+    string str = getToken();
+    if(str=","){
+        aux6();
+    }else{
+        this->cont--;
+    }
+}
+void aux8(){
+    this->cont++;
+    string str = getToken();
+    if(str="="){
+        aux4();
+    }else{
+        this->cont--;
+    }
+}
+void aux9(){
+    if(aux2){
+        this->cont++;
+        string str = getToken();
+        if(str=="def"){
+            this->cont++;
+            if(sorter()=="identifier"){
+                this->cont++;
+                string str = getToken();
+                if(str == "("){
+                    aux10();
+                    this->cont++;
+                    string str = getToken();
+                    if(str == ")"){
+                        this->cont++;
+                        string str = getToken();
+                        if(str == "{"){
+                            aux12()
+                            aux14();
+                            this->cont++;
+                            string str = getToken();
+                            if(str == "}"){
+                                aux9();
+                            }else{
+                                //Error faltan llaves
+                                reportError(16);
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            aux6();
+            this->cont++;
+            string str = getToken();
+            if(str != ";"){
+                reportError(3);
+            }
+        }
+    }else{
+        this->cont--;
+    }
+}
+void aux10(){
+    if(aux2()){
+        this->cont++;
+        if(sorter() == "identifier"){
+            aux11();
+        }
+    }else{
+        this->cont--;
+    }
+}
+void aux11(){
+    this->cont++;
+    string str = getToken();
+    if(str == ","){
+        aux10();
+    }else{
+        this->cont--;
+    }
+}
+void aux12(){
+    if(proposition()){
+        aux13();
+    }
+}
+void aux13(){
+    this->cont++;
+    string str = getToken();
+    if(str != "return" && str != "}"){
+        aux12();
+    }else{
+        this->cont--;
+    }
+}
+void aux14(){
+    this->cont++;
+    string str = getToken();
+    if(str == "return"){
+        aux15();
+    }else{
+        this->cont--;
+    }
+}
+bool aux15(){
+    this->cont++;
+    string word = sorter();
+    bool ans = false;
+    if(word == "number" || word == "boolean" || word == "text" || word == "identifier"){
+        ans = true;
+    }
+    return ans;
+}
+void aux16(){
+    this->cont++;
+    string str = getToken();
+    if(str == "int"){
+        this->cont++;
+        string str = getToken();
+        if(str == "def"){
+            this->cont++;
+            string str = getToken();
+            if(str == "main"){
+                this->cont++;
+                string str = getToken();
+                if(str == "("){
+                    this->cont++;
+                    string str = getToken();
+                    if(str == ")"){
+                        this->cont++;
+                        string str = getToken();
+                        if(str == "{"){
+                            aux17();
+                            this->cont++;
+                            string str = getToken();
+                            if(str == "return"){
+                                this->cont++;
+                                string str = getToken();
+                                if(str == "0"){
+                                    this->cont++;
+                                    string str = getToken();
+                                    if(str == ";"){
+                                        this->cont++;
+                                        string str = getToken();
+                                        if(str != "}"){
+                                            reportError(16);
+                                        }
+                                    }else{
+                                        reportError(3);
+                                    }
+                                }else{
+                                    reportError(4);
+                                }
+                            }else{
+                                reportError(5);
+                            }
+                        }else{
+                            reportError(24);
+                        }
+                    }else{
+                        reportError(15);
+                    }
+                }else{
+                    reportError(23);
+                }
+            }else{
+                reportError(6);
+            }
+        }else{
+            reportError(7);
+        }
+    }else{
+        reportError(8);
+    }
+}
+void aux17(){
+    this->cont++;
+    string str = getToken();
+    if(str != "return" && str != "}"){
+        if(proposition()){
+            aux18();
+        }
+    }else{
+        this.cont--;
+    }
+}
+
+string sorter(){
+    word = getToken();
+    if(isIdentifier(word)) return "identifier";
+    else if(isNumber(word)) return "number";
+    else if(isText(word)) return "text";
+    else if(isBoolean(word)) return "boolean";
+    else reportError(1);
+}
+bool isIdentifier(string word){
+    if(!(word[0] >= 'a' && word[0]<= 'z'))
+        return false;
+    for(unsigned int i = 1; i < word.length(); i++)
+        if(!((word[i] >= 'a' && word[i] <= 'z') || (word[i] >= 'A' && word[i] <= 'Z') || (word[i] >='0' && word[i] <= '9')))
+            return false;
+    return true;
+}
+bool isNumber(string word){
+    for(char s : word)
+        if(!((s >= '0' && s <= '9') || s == '.'))
+            return false;
+    return true;
+}
+bool isText(string word){
+    return (word[0]== 34 and word[word.length()-1] == 34);
+}
+bool isBoolean(string word){
+    return (word == "true" || word == "false");
+}
 
 void Analyzer::reportError(int codeError) {
     switch (codeError) {
         case 0:
-            cout << "Unexpected symbol in EOF" << endl;
+            cout<<"Unexpected symbol in EOF"<<endl;
             break;
         case 1:
+            cout<<"Unexpected sentence"<<endl;
             break;
         case 2:
             cout << "Bad structure. A proposition was expected." << endl;
             break;
         case 3:
+            cout<<"Was expected semicolon"<<endl;
             break;
         case 4:
+            cout<<"Was expected a 0 (process code)"<<endl;
             break;
         case 5:
+            cout<<"Was expected return"<<endl;
             break;
         case 6:
+            cout<<"main entry don't found"<<endl;
             break;
         case 7:
+            cout<<"Was expected def"<<endl;
             break;
         case 8:
+            cout<<"De la funcion main falta tipo entero"<<endl;
             break;
         case 9:
             break;
