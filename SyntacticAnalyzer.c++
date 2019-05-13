@@ -64,13 +64,13 @@ class Analyzer {
 
 // Constructor
 Analyzer::Analyzer(vector<string> tokens) {
-    this->cont = 0;
+    this->cont = -1;
     this->tokens = tokens;
 }
 
 // Destructor
 Analyzer::~Analyzer() {
-    this->cont = 0;
+    this->cont = -1;
     if(!this->tokens.empty())
         this->tokens.clear();
 }
@@ -84,6 +84,7 @@ string Analyzer::getToken() {
 }
 
 void Analyzer::program() {
+    cout<<"---program---"<<endl;
     block();
     this->cont++;
     string str = getToken();
@@ -94,12 +95,14 @@ void Analyzer::program() {
 }
 
 void Analyzer::block() {
+    cout<<"---block---"<<endl;
     aux1();
     aux9();
     aux16();
 }
 
 bool Analyzer::proposition(){
+    cout<<"---proposition---"<<endl;
     this->cont++;
     string str = getToken();
     string type = sorter();
@@ -236,6 +239,7 @@ bool Analyzer::proposition(){
 }
 
 void Analyzer::expression() {
+    cout<<"---expression---"<<endl;
     this->cont++;
     string type = sorter();
     string str = getToken();
@@ -251,6 +255,7 @@ void Analyzer::expression() {
 }
 
 bool Analyzer::condition() {
+    cout<<"---condition---"<<endl;
     bool ans = true;
     if(aux15()) {
         if(aux35()) {
@@ -301,11 +306,13 @@ bool Analyzer::isBoolean(string word) {
 }
 
 void Analyzer::aux1() {
+    cout<<"---aux1---"<<endl;
     this->cont++;
     string str = getToken();
     if(str == "const") {
         if(aux2() && aux3() && aux4()) {
             this->cont++;
+            str = getToken();
             if(str == ";") aux1();
             else reportError(3);
         }
@@ -314,19 +321,20 @@ void Analyzer::aux1() {
 }
 
 bool Analyzer::aux2() {
+    cout<<"---aux2---"<<endl;
     this->cont++;
     string str = getToken();
     if(str == "int" || str == "dec" || str == "bool" || str == "chr" || str == "str")
         return true;
     else {
-        reportError(4);
+        reportError(27);
         return false;
     }
 }
 
 bool Analyzer::aux3() {
+    cout<<"---aux3---"<<endl;
     this->cont++;
-    string str = getToken();
     bool ans = false;
     if(sorter() == "identifier") {
         this->cont++;
@@ -337,6 +345,7 @@ bool Analyzer::aux3() {
 }
 
 bool Analyzer::aux4() {
+    cout<<"---aux4---"<<endl;
     this->cont++;
     string word = sorter();
     bool ans = false;
@@ -347,6 +356,7 @@ bool Analyzer::aux4() {
 }
 
 void Analyzer::aux6() {
+    cout<<"---aux6---"<<endl;
     this->cont++;
     if(sorter() == "identifier") {
         aux8();
@@ -355,6 +365,7 @@ void Analyzer::aux6() {
 }
 
 void Analyzer::aux7() {
+    cout<<"---aux7---"<<endl;
     this->cont++;
     string str = getToken();
     if(str == ",") aux6();
@@ -362,6 +373,7 @@ void Analyzer::aux7() {
 }
 
 void Analyzer::aux8() {
+    cout<<"---aux8---"<<endl;
     this->cont++;
     string str = getToken();
     if(str == "=") aux4();
@@ -369,6 +381,25 @@ void Analyzer::aux8() {
 }
 
 void Analyzer::aux9() {
+    cout<<"---aux9---"<<endl;
+    this->cont++;
+    string str = getToken();
+    if(str == "int"){
+        this->cont++;
+        str = getToken();
+        if(str == "def") {
+            this->cont++;
+            str = getToken();
+            if(str == "main"){
+                aux16();
+            }else{
+                this->cont-=2;
+            }
+        }else{
+            this->cont--;
+        }
+    }
+    this->cont--;
     if(aux2()) {
         this->cont++;
         string str = getToken();
@@ -376,19 +407,19 @@ void Analyzer::aux9() {
             this->cont++;
             if(sorter() == "identifier") {
                 this->cont++;
-                string str = getToken();
+                str = getToken();
                 if(str == "(") {
                     aux10();
                     this->cont++;
-                    string str = getToken();
+                    str = getToken();
                     if(str == ")") {
                         this->cont++;
-                        string str = getToken();
+                        str = getToken();
                         if(str == "{") {
                             aux12();
                             aux14();
                             this->cont++;
-                            string str = getToken();
+                            str = getToken();
                             if(str == "}") {
                                 aux9();
                             }
@@ -415,6 +446,7 @@ void Analyzer::aux9() {
 }
 
 void Analyzer::aux10() {
+    cout<<"---aux10---"<<endl;
     if(aux2()) {
         this->cont++;
         if(sorter() == "identifier") aux11();
@@ -423,6 +455,7 @@ void Analyzer::aux10() {
 }
 
 void Analyzer::aux11() {
+    cout<<"---aux11---"<<endl;
     this->cont++;
     string str = getToken();
     if(str == ",") aux10();
@@ -430,12 +463,14 @@ void Analyzer::aux11() {
 }
 
 void Analyzer::aux12() {
+    cout<<"---aux12---"<<endl;
     if(proposition()) {
         aux13();
     }
 }
 
 void Analyzer::aux13() {
+    cout<<"---aux13---"<<endl;
     this->cont++;
     string str = getToken();
     if(str != "return" && str != "}") aux12();
@@ -443,6 +478,7 @@ void Analyzer::aux13() {
 }
 
 void Analyzer::aux14() {
+    cout<<"---aux14---"<<endl;
     this->cont++;
     string str = getToken();
     if(str == "return") aux15();
@@ -450,6 +486,7 @@ void Analyzer::aux14() {
 }
 
 bool Analyzer::aux15() {
+    cout<<"---aux15---"<<endl;
     this->cont++;
     string word = sorter();
     bool ans = false;
@@ -460,58 +497,46 @@ bool Analyzer::aux15() {
 }
 
 void Analyzer::aux16() {
+    cout<<"---aux16---"<<endl;
     this->cont++;
     string str = getToken();
-    if(str == "int") {
+    if(str == "(") {
         this->cont++;
-        string str = getToken();
-        if(str == "def") {
+        str = getToken();
+        if(str == ")") {
             this->cont++;
-            string str = getToken();
-            if(str == "main") {
+            str = getToken();
+            if(str == "{") {
+                aux17();
                 this->cont++;
-                string str = getToken();
-                if(str == "(") {
+                str = getToken();
+                if(str == "return") {
                     this->cont++;
-                    string str = getToken();
-                    if(str == ")") {
+                    str = getToken();
+                    if(str == "0") {
                         this->cont++;
-                        string str = getToken();
-                        if(str == "{") {
-                            aux17();
+                        str = getToken();
+                        if(str == ";") {
                             this->cont++;
-                            string str = getToken();
-                            if(str == "return") {
-                                this->cont++;
-                                string str = getToken();
-                                if(str == "0") {
-                                    this->cont++;
-                                    string str = getToken();
-                                    if(str == ";") {
-                                        this->cont++;
-                                        string str = getToken();
-                                        if(str != "}") reportError(16);
-                                    }
-                                    else reportError(3);
-                                }
-                                else reportError(4);
-                            }
-                            else reportError(5);
+                            str = getToken();
+                            if(str != "}") reportError(16);
                         }
-                        else reportError(24);
+                        else reportError(3);
                     }
-                    else reportError(15);
+                    else reportError(4);
                 }
-                else reportError(23);
+                else reportError(5);
             }
-            else reportError(6);
+            else reportError(24);
         }
-        else reportError(7);
+        else reportError(15);
     }
-    else reportError(8);
+    else reportError(23);
+
 }
 
 void Analyzer::aux17() {
+    cout<<"---aux17---"<<endl;
     this->cont++;
     string str = getToken();
     if(str != "return" && str != "}") {
@@ -521,6 +546,7 @@ void Analyzer::aux17() {
 }
 
 void Analyzer::aux18() {
+    cout<<"---aux18---"<<endl;
     this->cont++;
     string str = getToken();
     if(str != "return" && str != "\\") aux17();
@@ -528,6 +554,7 @@ void Analyzer::aux18() {
 }
 
 void Analyzer::aux19() {
+    cout<<"---aux19---"<<endl;
     this->cont++;
     string str = getToken();
     if(str != ")") {
@@ -538,6 +565,7 @@ void Analyzer::aux19() {
 }
 
 void Analyzer::aux20() {
+    cout<<"---aux20---"<<endl;
     this->cont++;
     string str = getToken();
     if(str != ")") {
@@ -548,6 +576,7 @@ void Analyzer::aux20() {
 }
 
 void Analyzer::aux21() {
+    cout<<"---aux21---"<<endl;
     this->cont++;
     string str = getToken();
     string type = sorter();
@@ -572,6 +601,7 @@ void Analyzer::aux21() {
 }
 
 void Analyzer::aux22() {
+    cout<<"---aux22---"<<endl;
     this->cont++;
     string str = getToken();
     string type = sorter();
@@ -582,7 +612,7 @@ void Analyzer::aux22() {
         if(str == "{") {
             aux17();
             this->cont++;
-            string str = getToken();
+            str = getToken();
             if(str != "}") reportError(16);
         }
         else reportError(24);
@@ -591,6 +621,7 @@ void Analyzer::aux22() {
 }
 
 void Analyzer::aux26() {
+    cout<<"---aux26---"<<endl;
     this->cont++;
     string str = getToken();
     string type = sorter();
@@ -605,11 +636,11 @@ void Analyzer::aux26() {
 
         if(str == "else" && str2 == "if") {
             this->cont++;
-            string str = getToken();
+            str = getToken();
             if(str == "(") {
                 if(condition()) {
                     this->cont++;
-                    string str = getToken();
+                    str = getToken();
                     if(str == ")") {
                         aux22();
                         aux28();
@@ -625,6 +656,7 @@ void Analyzer::aux26() {
 }
 
 void Analyzer::aux28() {
+    cout<<"---aux28---"<<endl;
     this->cont++;
     string str = getToken();
     string type = sorter();
@@ -641,6 +673,7 @@ void Analyzer::aux28() {
 }
 
 void Analyzer::aux29() {
+    cout<<"---aux29---"<<endl;
     this->cont++;
     string str = getToken();
     string type = sorter();
@@ -649,7 +682,7 @@ void Analyzer::aux29() {
         str != "str" && type != "identifier" && str != "if" && str != "while"
         && str != "iter" && str != "return" && str != "}") {
         this->cont++;
-        string str = getToken();
+        str = getToken();
         if(str == "else") aux30();
         else reportError(25);
     }
@@ -657,6 +690,7 @@ void Analyzer::aux29() {
 }
 
 void Analyzer::aux30() {
+    cout<<"---aux30---"<<endl;
     this->cont++;
     string str = getToken();
     string type = sorter();
@@ -665,11 +699,11 @@ void Analyzer::aux30() {
         str != "str" && type != "identifier" && str != "if" && str != "while"
         && str != "iter" && str != "return" && str != "}") {
         this->cont++;
-        string str = getToken();
+        str = getToken();
         if(str == "{") {
             aux17();
             this->cont++;
-            string str = getToken();
+            str = getToken();
             if(str != "{") reportError(16);
         }
         else reportError(24);
@@ -678,6 +712,7 @@ void Analyzer::aux30() {
 }
 
 bool Analyzer::aux31() {
+    cout<<"---aux31---"<<endl;
     bool ans = true;
     this->cont++;
     string type = sorter();
@@ -686,6 +721,7 @@ bool Analyzer::aux31() {
 }
 
 bool Analyzer::aux32() {
+    cout<<"---aux32---"<<endl;
     bool ans = true;
     this->cont++;
     string str = getToken();
@@ -697,6 +733,7 @@ bool Analyzer::aux32() {
 }
 
 void Analyzer::aux33() {
+    cout<<"---aux33---"<<endl;
     this->cont++;
     string str = getToken();
     if(str != ";") {
@@ -706,6 +743,7 @@ void Analyzer::aux33() {
 }
 
 bool Analyzer::aux34() {
+    cout<<"---aux34---"<<endl;
     bool ans = true;
     this->cont++;
     string str = getToken();
@@ -718,6 +756,7 @@ bool Analyzer::aux34() {
 }
 
 bool Analyzer::aux35() {
+    cout<<"---aux35---"<<endl;
     bool ans = true;
     this->cont++;
     string str = getToken();
@@ -730,6 +769,7 @@ bool Analyzer::aux35() {
 }
 
 void Analyzer::aux36() {
+    cout<<"---aux36---"<<endl;
     this->cont++;
     string str = getToken();
     if(str != ")") {
@@ -743,6 +783,7 @@ void Analyzer::aux36() {
 }
 
 bool Analyzer::aux37() {
+    cout<<"---aux37---"<<endl;
     bool ans = true;
     this->cont++;
     string str = getToken();
@@ -818,6 +859,8 @@ void Analyzer::reportError(int codeError) {
         case 26:
             cout << "An identifier was expected." << endl;
             break;
+        case 27:
+            cout<<"Was expected a data type"<<endl;
         default:
             cout << "";
     }
@@ -826,7 +869,11 @@ void Analyzer::reportError(int codeError) {
 int main() {
     string fileName = "code.txt";
     Extractor extractor(Preprocessor::preprocessFile(fileName));
-    Analyzer analyzer(extractor.extractTokens());
+    vector<string> ans = extractor.extractTokens();
+    for(int i = 0;i<ans.size();i++){
+        cout<<ans[i]<<endl;
+    }
+    Analyzer analyzer(ans);
     analyzer.program();
     // Now, we will remove the temporary file
     remove(("temp_"+fileName).c_str());

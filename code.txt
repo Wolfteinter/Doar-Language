@@ -1,35 +1,3 @@
-// Single comment
 int def main() {
-    a23 =- 20.5;
-    int a,b,c,d;
-    a++;
-    a+=5;
-    a<>b;
-    a--;
-    a-=5;
-    a <= 67;
-    a**3;
-    2_/34;
-    a = 34;
-    x %= 2;
-    2 << 1;
-    a="hola"
-    if(a=="hola"){
-        hola();
-    }else if(a=="nohola"){noHola();}
-    print("Hola #32.435543 esto es un");
-    llamar();
     return 0;
-}
-/* multiline comment
-adknajnad
-ad afj
-*/
-
-def bool aFunction() {
-
-}
-
-def bool otherfunction() {
-
 }
