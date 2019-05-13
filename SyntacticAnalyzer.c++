@@ -98,7 +98,7 @@ void Analyzer::block() {
     cout<<"---block---"<<endl;
     aux1();
     aux9();
-    aux16();
+    //aux16();
 }
 
 bool Analyzer::proposition(){
@@ -384,7 +384,7 @@ void Analyzer::aux9() {
     cout<<"---aux9---"<<endl;
     this->cont++;
     string str = getToken();
-    if(str == "int"){
+    if(str == "int") {
         this->cont++;
         str = getToken();
         if(str == "def") {
@@ -392,6 +392,7 @@ void Analyzer::aux9() {
             str = getToken();
             if(str == "main"){
                 aux16();
+                return;
             }else{
                 this->cont-=2;
             }
@@ -542,7 +543,9 @@ void Analyzer::aux17() {
     if(str != "return" && str != "}") {
         if(proposition()) aux18();
     }
-    else this->cont--;
+    else {
+        this->cont--;
+    }
 }
 
 void Analyzer::aux18() {
@@ -578,13 +581,13 @@ void Analyzer::aux20() {
 void Analyzer::aux21() {
     cout<<"---aux21---"<<endl;
     this->cont++;
-    string str = getToken();
     string type = sorter();
+    this->cont++;
+    string str = getToken();
     // Duda, porque se supone que puede ser identificador o bien expresión
     // sin embargo, el first de expression también es un identificador
-    if(type == "identifier") {
-        this->cont++;
-        str = getToken();
+    // para solventar eso, leo el siguiente token después del indentificador
+    if(type == "identifier" && str != "=") {
         if(str == "(") {
             aux19();
             this->cont++;
@@ -596,8 +599,12 @@ void Analyzer::aux21() {
             }
             else reportError(15);
         }
+        else reportError(23);
     }
-    else expression();
+    else {
+        this->cont -= 2;
+        expression();
+    }
 }
 
 void Analyzer::aux22() {
@@ -629,6 +636,7 @@ void Analyzer::aux26() {
     string str2 = getToken();
     // Aquí hay un detalle, ya los follow de aux26 incluyen el 'else' y en
     // aux26, cuando no se omite, comienza con 'else if'.
+    // Para solucionarlo, se lee un siguiente token, para comprobar si es if
     if((str != "else" || (str == "else" && str2 == "if")) && str != "int" &&
         str != "dec" && str != "bool" && str != "chr" && str != "str" &&
         type != "identifier" && str != "if" && str != "while" && str != "iter"
@@ -870,7 +878,7 @@ int main() {
     string fileName = "code.txt";
     Extractor extractor(Preprocessor::preprocessFile(fileName));
     vector<string> ans = extractor.extractTokens();
-    for(int i = 0;i<ans.size();i++){
+    for(unsigned int i = 0;i < ans.size();i++){
         cout<<ans[i]<<endl;
     }
     Analyzer analyzer(ans);
