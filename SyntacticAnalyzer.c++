@@ -7,6 +7,8 @@
 #include "Extractor.cpp"
 #include "Preprocessor.cpp"
 
+#define watch(x) cout << (#x) << " is " << (x) << endl;
+
 using namespace std;
 
 class Analyzer {
@@ -176,7 +178,7 @@ bool Analyzer::proposition(){
         }
         else reportError(15);
     }
-    // Follows aux2
+    // Firsts aux2
     else if(str == "int") {
         aux6();
         this->cont++;
@@ -368,6 +370,7 @@ void Analyzer::aux7() {
     cout<<"---aux7---"<<endl;
     this->cont++;
     string str = getToken();
+    // watch(str);
     if(str == ",") aux6();
     else this->cont--;
 }
@@ -376,6 +379,7 @@ void Analyzer::aux8() {
     cout<<"---aux8---"<<endl;
     this->cont++;
     string str = getToken();
+    // watch(str);
     if(str == "=") aux4();
     else this->cont--;
 }
@@ -401,7 +405,7 @@ void Analyzer::aux9() {
         }
     }
     this->cont--;
-    if(aux2()) {
+    if(aux2()) { // int, dec, bool, chr o str
         this->cont++;
         string str = getToken();
         if(str == "def") {
@@ -541,6 +545,7 @@ void Analyzer::aux17() {
     this->cont++;
     string str = getToken();
     if(str != "return" && str != "}") {
+        this->cont--;
         if(proposition()) aux18();
     }
     else {
@@ -552,7 +557,10 @@ void Analyzer::aux18() {
     cout<<"---aux18---"<<endl;
     this->cont++;
     string str = getToken();
-    if(str != "return" && str != "\\") aux17();
+    if(str != "return" && str != "}") {
+        this->cont--;
+        aux17();
+    }
     else this->cont--;
 }
 
