@@ -4,8 +4,8 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include "Extractor.cpp"
-#include "Preprocessor.cpp"
+// #include "Extractor.cpp"
+// #include "Preprocessor.cpp"
 
 #define watch(x) cout << (#x) << " is " << (x) << endl;
 
@@ -977,7 +977,7 @@ void Analyzer::reportError(int codeError) {
             cout << "";
     }
 }
-
+/*
 int main() {
     string fileName = "code.txt";
     Extractor extractor(Preprocessor::preprocessFile(fileName));
@@ -991,3 +991,4 @@ int main() {
     remove(("temp_"+fileName).c_str());
     return 0;
 }
+*/

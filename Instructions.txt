@@ -10,5 +10,5 @@
 
 4) And for lauch: ./main
 
-5) Actually, we can know the output of process of the lexical analysis and
-therefore know the errors in code.
+5) Actually, we can know the output of process of the lexical analysis and syntactic
+analysis.

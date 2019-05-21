@@ -1,8 +1,8 @@
 /*
 Equipo: David Betancourt Montellano, Onder Francisco Campos Garcia.
 Núm. lista: 3 , 5.
-Fecha: 27/02/2019.
-Evidencia: Primera fase de la fase de compilación-> Análisis léxico.
+Fecha: Mayo del 2019
+Evidencia: Analizador sintáctico.
 Docente: Karina Rodríguez Mejía.
 Programa académico: Ingeniería en sistemas computacionales.
 Unidad de aprendizaje: Compiladores.
@@ -14,6 +14,7 @@ Para más información revisar 'Instructions.txt'.
 #include "Extractor.cpp"
 #include "LexicoAnalysis.cpp"
 #include "Preprocessor.cpp"
+#include "SyntacticAnalyzer.c++"
 
 using namespace std;
 
@@ -21,8 +22,9 @@ int main() {
     string fileName = "code.txt";
     Extractor extractor(Preprocessor::preprocessFile(fileName));
     LexicoAnalysis analy;
+    vector<string> ans = extractor.extractTokens();
     // Get set errors
-    vector<string> errors = analy.analysis(extractor.extractTokens());
+    vector<string> errors = analy.analysis(ans);
     // Errors:
     if(errors.size() != 0) {
         int err = 1;
@@ -31,7 +33,12 @@ int main() {
             err++;
         }
     }
-    else cout << "There are no errors" << endl;
+    else {
+        // cout << "There are no errors" << endl;
+
+        Analyzer analyzer(ans);
+        analyzer.program();
+    }
     // Now, we will remove the temporary file
     remove(("temp_"+fileName).c_str());
     return 0;
