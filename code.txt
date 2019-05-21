@@ -1,3 +1,14 @@
+// Constantes
+const int a = 45;
+// Variables
+int variable = 353535;
+// Funciones
+chr def unaFuncion(int a) {
+    variable += 34;
+    a = variable + a;
+    return a;
+}
+// Main
 int def main() {
     return 0;
 }
