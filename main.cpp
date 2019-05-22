@@ -19,7 +19,7 @@ Para más información revisar 'Instructions.txt'.
 using namespace std;
 
 int main() {
-    string fileName = "code.txt";
+    string fileName = "code.doa";
     Extractor extractor(Preprocessor::preprocessFile(fileName));
     LexicoAnalysis analy;
     vector<string> ans = extractor.extractTokens();

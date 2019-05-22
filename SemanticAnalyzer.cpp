@@ -4,18 +4,98 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-// #include "Extractor.cpp"
-// #include "Preprocessor.cpp"
+#include "Extractor.cpp"
+#include "Preprocessor.cpp"
 
 #define watch(x) cout << (#x) << " is " << (x) << endl;
 
 using namespace std;
+
+class Function {
+    private:
+        string name;
+        vector<string> params;
+        string typeOfReturn;
+    public:
+        Function();
+        ~Function();
+        bool testName(string);
+        bool testParams(vector<string>);
+        bool testTypeOfReturn(string);
+        string getName();
+        vector<string> getParams();
+        string getTypeOfReturn();
+        void setName(string);
+        void setParams(vector<string>);
+        void setTypeOfReturn(string);
+};
+
+Function::Function() {
+    this->name = "";
+    this->typeOfReturn = "";
+}
+
+Function::~Function() {
+    if(!this->name.empty()) this->name.clear();
+    if(!this->params.empty()) this->params.clear();
+    if(!this->typeOfReturn.empty()) this->typeOfReturn.clear();
+}
+
+bool Function::testName(string name) {
+    return (this->name == name);
+}
+
+bool Function::testParams(vector <string> args) {
+    bool ans = true;
+
+    if(args.size() != this->params.size()) ans = false;
+    // Compare each type of argument
+    else {
+        for (unsigned int i = 0; i < args.size(); i++) {
+            if(args[i] != this->params[i]) {
+                ans = false;
+                break;
+            }
+        }
+    }
+    return ans;
+}
+
+bool Function::testTypeOfReturn(string type) {
+    return (this->typeOfReturn == type);
+}
+
+// Access methods
+string Function::getName() {
+    return this->name;
+}
+
+vector<string> Function::getParams() {
+    return this->params;
+}
+
+string Function::getTypeOfReturn() {
+    return this->typeOfReturn;
+}
+
+void Function::setName(string name) {
+    this->name = name;
+}
+
+void Function::setParams(vector<string> args) {
+    this->params = args;
+}
+
+void Function::setTypeOfReturn(string type) {
+    this->typeOfReturn = type;
+}
 
 class Analyzer {
     private:
         vector<string> tokens;
         int cont;
         bool isThereAnError;
+        vector<Function> functions;
     public:
         Analyzer(vector<string>);
         ~Analyzer();
@@ -977,7 +1057,7 @@ void Analyzer::reportError(int codeError) {
             cout << "";
     }
 }
-/*
+
 int main() {
     string fileName = "code.doa";
     Extractor extractor(Preprocessor::preprocessFile(fileName));
@@ -991,4 +1071,3 @@ int main() {
     remove(("temp_"+fileName).c_str());
     return 0;
 }
-*/
