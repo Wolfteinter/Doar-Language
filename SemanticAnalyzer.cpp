@@ -557,6 +557,22 @@ void Analyzer::expression() {
     string type = sorter();
     string str = getToken();
     if(type == "identifier") {
+        // Check that it is not a constant.
+        if(searchConstant(str)) {
+            reportSemanticError(9, str);
+        }
+        else {
+            // Check that it is of numeric type
+            string typeVariable = getTypeVariable(str);
+            if(typeVariable != "int" && typeVariable != "dec") {
+                reportSemanticError(10, "'" + typeVariable + " " + str + "'.");
+            }
+            // Check that the variable exists.
+            else if(!searchVariable(str)) {
+                reportSemanticError(4, str);
+            }
+        }
+        // Go checking that they are only operated with numeric types
         aux32();
         aux31();
         aux33();
@@ -1194,7 +1210,22 @@ bool Analyzer::aux31() {
     bool ans = true;
     this->cont++;
     string type = sorter();
-    if(type != "identifier" && type != "int" && type != "dec") ans = false;
+    if(type != "identifier" && type != "int" && type != "dec") {
+        ans = false;
+    }
+    else if(type == "identifier") {
+        // Check if identifier is numeric and if exists
+        string name = getToken();
+        string typeVariable = getTypeVariable(name);
+        if(typeVariable != "nonexistent") {
+            if(typeVariable != "int" && typeVariable != "dec") {
+                reportSemanticError(10, "'" + typeVariable + " " + name + "'.");
+            }
+        }
+        else {
+            reportSemanticError(4, name);
+        }
+    }
     return ans;
 }
 
@@ -1382,6 +1413,12 @@ void Analyzer::reportSemanticError(int codeError, string message) {
             break;
         case 8:
             cout << message << " was not declared in this scope or incorrect prototype in calling function." << endl;
+        case 9:
+            cout << "You can not change the value of the constant '" << message << "'" << endl;
+            break;
+        case 10:
+            cout << "Illegal expression by non-numerical type " << message << endl;
+            break;
         default:
             cout << "";
 
