@@ -13,10 +13,11 @@ str nombre = "David";
 bool bandera, banderilla = false;
 
 // Funciones
-int def funcion1(int rx) {
-    int c = 4;
-    return rx;
+dec def funcion1(int rx) {
+    dec c = 6;
+    return c;
 }
+
 
 chr def funcion2(int rxy) {
     chr alala = "d";
@@ -28,6 +29,7 @@ dec def funcion2() {
     int a = 5;
     return 2.0;
 }
+
 
 str def funcion3(int a, str x) {
     a = 2;
@@ -52,6 +54,7 @@ bool def funcion5(int a, dec b, chr c, str d, bool e) {
 // Main
 int def main() {
     int ff;
-    funcion1(ff);
+    int gg;
+    ff = funcion1(gg);
     return 0;
 }
