@@ -1,14 +1,57 @@
 // Constantes
-const int a = 45;
+const int lego2 = 400;
+const chr arr = "r";
+const chr arr2 = "o";
+
 // Variables
-int variable = 353535;
+int a = 5;
+int lego;
+int l, b = 45;
+chr x = "A";
+dec d, e, f = 5.0;
+str nombre = "David";
+bool bandera, banderilla = false;
+
 // Funciones
-chr def unaFuncion(int a) {
-    variable += 34;
-    a = variable + a;
-    return a;
+int def funcion1(int rx) {
+    int c = 4;
+    return rx;
 }
+
+chr def funcion2(int rxy) {
+    chr alala = "d";
+    return alala;
+}
+/*
+
+dec def funcion2() {
+    int a = 5;
+    return 2.0;
+}
+
+str def funcion3(int a, str x) {
+    a = 2;
+    return x;
+}
+*/
+
+// /* Aquí hay un errors
+/*
+chr def funcion4() {
+    str cadena = "hola";
+    return "a";
+}
+*/
+/*
+bool def funcion5(int a, dec b, chr c, str d, bool e) {
+    a = 3;
+    return true;
+}
+*/
+
 // Main
 int def main() {
+    int ff;
+    funcion1(ff);
     return 0;
 }
