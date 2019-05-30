@@ -106,6 +106,9 @@ class Analyzer {
         bool isThereAnError;
         vector<Function> functions;
         string currentFunction;
+        int contIter;
+        int contWhile;
+        int contIf;
         map<string, vector<pair<string, string>>> variables;
         vector<pair<string, string>> constants;
     public:
@@ -123,7 +126,9 @@ class Analyzer {
         void addVariable(string, string);
         void addConstant(string, string);
         void addVariablesArgs(vector<pair<string,string>>);
+        void checkParamsFunctionCall(vector<pair<string,string>>, string);
         string getTypeVariable(string);
+        string getTypeConstant(string);
         vector<Function> getFunctions();
         void program();//Ready
         void block();//David
@@ -168,7 +173,7 @@ class Analyzer {
         bool aux32();//David
         void aux33();//David
         bool aux34();//David
-        bool aux35();//David
+        bool aux35(string &);//David
         void aux36();//David
         bool aux37();//David
         void reportError(int);//Onder Y David
@@ -181,6 +186,9 @@ Analyzer::Analyzer(vector<string> tokens) {
     this->tokens = tokens;
     this->isThereAnError = false;
     this->currentFunction = "global";
+    this->contWhile = 0;
+    this->contIter = 0;
+    this->contIf = 0;
     vector<pair<string, string>> localVariables;
     this->variables.insert(pair<string, vector<pair<string, string>>>("global", localVariables));
 }
@@ -188,6 +196,9 @@ Analyzer::Analyzer(vector<string> tokens) {
 // Destructor
 Analyzer::~Analyzer() {
     this->cont = -1;
+    this->contWhile = 0;
+    this->contIter = 0;
+    this->contIf = 0;
     if(!this->tokens.empty())
         this->tokens.clear();
 }
@@ -316,6 +327,17 @@ void Analyzer::addVariablesArgs(vector<pair<string,string>> params) {
     }
 }
 
+void Analyzer::checkParamsFunctionCall(vector<pair<string,string>> params, string nameFunction) {
+    for (unsigned int i = 0; i < params.size(); i++) {
+        if(params[i].first != "#none") {
+            // Check if it is constant and check if it is variable
+            if(!searchVariable(params[i].first) && !searchConstant(params[i].first)) {
+                reportSemanticError(11, "'" + params[i].first + "' in function call " + nameFunction);
+            }
+        }
+    }
+}
+
 string Analyzer::getTypeVariable(string nameVariable) {
     string ans = "nonexistent"; // hip; Non-existent
     map<string, vector<pair<string, string>>>::iterator itr;
@@ -326,6 +348,17 @@ string Analyzer::getTypeVariable(string nameVariable) {
         }
     }
     return ans;
+}
+
+string Analyzer::getTypeConstant(string nameConstant) {
+    string type = "nonexistent";
+    for (unsigned int i = 0; i < this->constants.size(); i++) {
+        if(nameConstant == this->constants[i].first) {
+            type = this->constants[i].second;
+            break;
+        }
+    }
+    return type;
 }
 
 vector<Function> Analyzer::getFunctions() {
@@ -379,6 +412,8 @@ bool Analyzer::proposition(){
         else reportError(15);
     }
     else if(str == "while") {
+        //vector<pair<string, string>>> vars;
+        //string name = "while_" + to_string(this->contWhile);
         this->cont++;
         str = getToken();
         if(str == "(") {
@@ -467,13 +502,14 @@ bool Analyzer::proposition(){
         // For construct the function
         string nameFunction = getToken();
         vector<pair<string, string>> params;
-        string typeOfReturn = "none";
+        string typeOfReturn = "#none";
         string nameVariable = nameFunction;
         this->cont++;
         str = getToken();
         // Calling a function
         if(str == "(") {
             aux19(params);
+            //checkParamsFunctionCall(params, nameFunction);
             this->cont++;
             str = getToken();
             if(str == ")") {
@@ -498,26 +534,33 @@ bool Analyzer::proposition(){
         }
         // Asigning calling a function
         else if(str == "=" && postSorter() == "identifier") {
+            if(!searchVariable(nameVariable)) {
+                reportSemanticError(4, nameVariable);
+            }
             nameFunction = postGetToken();
             this->cont += 2;
             str = getToken();
             if(str == "(") {
                 aux19(params);
+                //checkParamsFunctionCall(params, nameFunction);
                 this->cont++;
                 str = getToken();
                 if(str == ")") {
                     this->cont++;
                     str = getToken();
                     if(str != ";") reportError(3);
-                    else{
+                    else {
                         Function func(nameFunction,params,typeOfReturn);
-                        watch(nameFunction)
                         string possibleTypeOfReturn = searchFunction(func);
-                        watch(possibleTypeOfReturn)
                         if(possibleTypeOfReturn != "nonexistent") {
-                            func.setTypeOfReturn(possibleTypeOfReturn);
-                            if(getTypeVariable(nameVariable) != func.getTypeOfReturn()){
-                                reportSemanticError(2,nameFunction);
+                            if(searchConstant(nameVariable)) {
+                                reportSemanticError(9, nameVariable);
+                            }
+                            else {
+                                func.setTypeOfReturn(possibleTypeOfReturn);
+                                if(getTypeVariable(nameVariable) != func.getTypeOfReturn()) {
+                                    reportSemanticError(2,nameFunction);
+                                }
                             }
                         }
                         else {
@@ -602,10 +645,57 @@ void Analyzer::expression() {
 bool Analyzer::condition() {
     cout<<"---condition---"<<endl;
     bool ans = true;
-    string aux, aux2;
-    if(aux15(aux, aux2)) {
-        if(aux35()) {
-            if(aux15(aux, aux2)) {
+    string type1, name1;
+    string type2, name2;
+
+    if(aux15(type1, name1)) {
+        string op;
+        if(aux35(op)) {
+            if(aux15(type2, name2)) {
+                // Check types of variables of constants
+                if(type1 == "identifier") {
+                    type1 = getTypeVariable(name1);
+                    if(type1 == "nonexistent") {
+                        type1 = getTypeConstant(name1);
+                        if(type1 == "nonexistent") {
+                            reportSemanticError(11, "In " + this->currentFunction + " " + name1);
+                        }
+                    }
+                }
+                if(type2 == "identifier") {
+                    type2 = getTypeVariable(name2);
+                    if(type2 == "nonexistent") {
+                        type2 = getTypeConstant(name2);
+                        if(type2 == "nonexistent") {
+                            reportSemanticError(11, "In " + this->currentFunction + " " + name2);
+                        }
+                    }
+                }
+                // Check relation with both types
+                if(type1 == "int" && type2 == "int") {
+                }
+                else if(type1 == "int" && type2 == "dec") {
+                }
+                else if(type1 == "dec" && type2 == "int") {
+                }
+                else if(type1 == "dec" && type2 == "dec") {
+                }
+                else if(type1 == "chr" && type2 == "chr") {
+                }
+                else if(type1 == "bool" && type2 == "bool") {
+                    if(op != "==" && op != "!=") {
+                        reportSemanticError(12, " illegal logical relation '" + op + "' for bool-bool");
+                    }
+                }
+                else if(type1 == "str" && type2 == "str") {
+                    if(op != "==" && op != "!=") {
+                        reportSemanticError(12, " illegal logical relation '" + op + "' for string-string");
+                    }
+                }
+                else {
+                    reportSemanticError(12, " types not allowed or nonexistent.");
+                }
+                // Check if exist more conditions
                 aux36();
             }
             else ans = false;
@@ -986,12 +1076,15 @@ bool Analyzer::aux15(string &typeContent, string &name) {
     if(word == "int" || word == "dec" || word == "bool" || word == "chr"
         || word == "str" || word == "identifier") {
         ans = true;
+        if(word == "identifier") name = getToken();
+        else name = "#none";
     }
     else {
         word = "other";
+        name = "#none";
     }
     typeContent = word;
-    name = getToken();
+
     return ans;
 }
 
@@ -1068,11 +1161,15 @@ void Analyzer::aux19(vector<pair<string, string>> &params) {
        if(aux15(typeContent, name)) {
             if(typeContent == "identifier") {
                 string typeVariable = getTypeVariable(name);
-                if(typeVariable == "nonexistent") {
+                string typeConstant = getTypeConstant(name);
+                if(typeVariable == "nonexistent" && typeConstant == "nonexistent") {
                    reportSemanticError(7, name);
                 }
                 else {
-                    params.push_back(make_pair(name, typeVariable));
+                    if(typeVariable != "nonexistent")
+                        params.push_back(make_pair(name, typeVariable));
+                    else
+                        params.push_back(make_pair(name, typeConstant));
                 }
             }
             else params.push_back(make_pair(name, typeContent));
@@ -1235,12 +1332,18 @@ bool Analyzer::aux31() {
         ans = false;
     }
     else if(type == "identifier") {
-        // Check if identifier is numeric and if exists
+        // Checking if identifier is numeric and if exists
         string name = getToken();
         string typeVariable = getTypeVariable(name);
+        string typeConstant = getTypeConstant(name);
         if(typeVariable != "nonexistent") {
             if(typeVariable != "int" && typeVariable != "dec") {
                 reportSemanticError(10, "'" + typeVariable + " " + name + "'.");
+            }
+        }
+        else if(typeConstant != "nonexistent") {
+            if(typeConstant != "int" && typeConstant != "dec") {
+                reportSemanticError(10, "'" + typeConstant + " " + name + "'.");
             }
         }
         else {
@@ -1290,7 +1393,7 @@ bool Analyzer::aux34() {
     return ans;
 }
 
-bool Analyzer::aux35() {
+bool Analyzer::aux35(string &op) {
     cout<<"---aux35---"<<endl;
     bool ans = true;
     this->cont++;
@@ -1301,6 +1404,7 @@ bool Analyzer::aux35() {
         ans = false;
         reportError(28);
     }
+    op = str;
     return ans;
 }
 
@@ -1434,15 +1538,21 @@ void Analyzer::reportSemanticError(int codeError, string message) {
             break;
         case 8:
             cout << message << " was not declared in this scope or incorrect prototype in calling function." << endl;
+            break;
         case 9:
             cout << "You can not change the value of the constant '" << message << "'" << endl;
             break;
         case 10:
             cout << "Illegal expression by non-numerical type " << message << endl;
             break;
+        case 11:
+            cout << message << " was not declared." << endl;
+            break;
+        case 12:
+            cout << "Incorrect condition: " << message << endl;
+            break;
         default:
             cout << "";
-
     }
 }
 
@@ -1455,7 +1565,7 @@ int main() {
     }
     Analyzer analyzer(ans);
     analyzer.program();
-    analyzer.displayFunctions();
+    //analyzer.displayFunctions();
     //analyzer.displayVariables();
     //analyzer.displayConstants();
     /*

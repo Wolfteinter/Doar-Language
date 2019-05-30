@@ -31,7 +31,7 @@ string Preprocessor::preprocessFile(string dirFile) {
                 if((prev >= '0' && prev <= '9') || (prev >= 'A' && prev <= 'Z') || (prev >= 'a' && prev <= 'z')) {
                     originalFile.get(c);
                     if((int)c == 0) break; // enf of file
-                    if((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
+                    if((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c == '\"') || (c == '\'')) {
                         tmpFile << " "; // insert whitespace
                     }
                     tmpFile << c;

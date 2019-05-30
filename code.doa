@@ -1,5 +1,32 @@
 // Constantes
-const int lego2 = 400;
+const int azul = 34;
+
+
+str def funcion1(int rx) {
+    dec c = 6.0;
+    return "hola";
+}
+
+/*
+
+
+const dec pi = 45.2;
+
+int b = 5;
+int lego;
+
+int def funcion1(int rx, chr ha, dec mov) {
+    dec c = 6.0;
+    return rx;
+}
+
+int def funcion2(int rx) {
+    int gh = 56;
+    return rx;
+}
+*/
+
+/*
 const chr arr = "r";
 const chr arr2 = "o";
 
@@ -23,38 +50,44 @@ chr def funcion2(int rxy) {
     chr alala = "d";
     return alala;
 }
-/*
-
-dec def funcion2() {
-    int a = 5;
-    return 2.0;
-}
-
-
-str def funcion3(int a, str x) {
-    a = 2;
-    return x;
-}
-*/
-
-// /* Aquí hay un errors
-/*
-chr def funcion4() {
-    str cadena = "hola";
-    return "a";
-}
-*/
-/*
-bool def funcion5(int a, dec b, chr c, str d, bool e) {
-    a = 3;
-    return true;
-}
 */
 
 // Main
 int def main() {
-    int ff;
-    int gg;
-    ff = funcion1(gg);
+    int x = 3, y = 2;
+    str aa = "hola", ab = "mundo";
+    chr rt = "3";
+    if(azul == 4.3) {
+
+    }
+    else if(aa == ab AND rt == "3" OR azul == 3) {
+
+    }
+    while(aa == ab AND rt == "3" OR y == y) {
+
+    }
+    iter(y to 100) {
+        iter(4 to 1000) {
+            
+        }
+    }
+    /*
+    int x = 3, y = 2;
+    str aa = "hola", ab = "mundo";
+    chr rt = "3";
+    if(azul == 4.3) {
+
+    }
+
+    while(aa == ab AND rt == "3" OR y == y) {
+
+    }
+    iter(y to "azul") {
+        iter(azul to 1000) {
+
+        }
+
+    }
+    */
     return 0;
 }
