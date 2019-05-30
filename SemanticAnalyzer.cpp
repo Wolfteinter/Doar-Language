@@ -468,7 +468,7 @@ bool Analyzer::proposition(){
         string nameFunction = getToken();
         vector<pair<string, string>> params;
         string typeOfReturn = "none";
-
+        string nameVariable = nameFunction;
         this->cont++;
         str = getToken();
         // Calling a function
@@ -498,6 +498,7 @@ bool Analyzer::proposition(){
         }
         // Asigning calling a function
         else if(str == "=" && postSorter() == "identifier") {
+            nameFunction = postGetToken();
             this->cont += 2;
             str = getToken();
             if(str == "(") {
@@ -508,6 +509,21 @@ bool Analyzer::proposition(){
                     this->cont++;
                     str = getToken();
                     if(str != ";") reportError(3);
+                    else{
+                        Function func(nameFunction,params,typeOfReturn);
+                        watch(nameFunction)
+                        string possibleTypeOfReturn = searchFunction(func);
+                        watch(possibleTypeOfReturn)
+                        if(possibleTypeOfReturn != "nonexistent") {
+                            func.setTypeOfReturn(possibleTypeOfReturn);
+                            if(getTypeVariable(nameVariable) != func.getTypeOfReturn()){
+                                reportSemanticError(2,nameFunction);
+                            }
+                        }
+                        else {
+                            reportSemanticError(8, "In " + this->currentFunction + " '" + nameFunction + "'");
+                        }
+                    }
                 }
                 else {
                     reportError(15);
@@ -847,7 +863,12 @@ void Analyzer::aux9() {
                         // We add the function
                         // name, args, type
                         Function func(nameFunction, args, typeOfReturn);
-                        this->functions.push_back(func);
+                        if(searchFunction(func)=="nonexistent"){
+                            this->functions.push_back(func);
+                        }else{
+                            reportSemanticError(3,nameFunction);
+                        }
+
                         // We create in variables map the data structure for store
                         // local variables.
                         vector<pair<string, string>> localVariables;
@@ -1434,7 +1455,7 @@ int main() {
     }
     Analyzer analyzer(ans);
     analyzer.program();
-    //analyzer.displayFunctions();
+    analyzer.displayFunctions();
     //analyzer.displayVariables();
     //analyzer.displayConstants();
     /*
