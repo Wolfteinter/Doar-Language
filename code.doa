@@ -1,15 +1,27 @@
 // Constantes
 const int azul = 34;
 
+dec lex = 2.3;
 
 str def funcion1(int rx) {
     dec c = 6.0;
+    int cv = 45;
     return "hola";
 }
 
+int def funcion2(int vvv) {
+    int adf = 3;
+    adf += vvv*3;
+    vvv = 0;
+    int i = 0;
+    iter(1 to 10) {
+        vvv += i;
+        i += 1;
+    }
+    return vvv;
+}
+
 /*
-
-
 const dec pi = 45.2;
 
 int b = 5;
@@ -26,68 +38,47 @@ int def funcion2(int rx) {
 }
 */
 
-/*
-const chr arr = "r";
-const chr arr2 = "o";
-
-// Variables
-int a = 5;
-int lego;
-int l, b = 45;
-chr x = "A";
-dec d, e, f = 5.0;
-str nombre = "David";
-bool bandera, banderilla = false;
-
-// Funciones
-dec def funcion1(int rx) {
-    dec c = 6;
-    return c;
-}
-
-
-chr def funcion2(int rxy) {
-    chr alala = "d";
-    return alala;
-}
-*/
-
 // Main
 int def main() {
     int x = 3, y = 2;
     str aa = "hola", ab = "mundo";
     chr rt = "3";
-    if(azul == 4.3) {
 
+    if(azul == 4.3) {
+        int ada = 4;
+        if(azul == 3) {
+            while(2 < 3) {
+                iter(5 to 1000) {
+                    int var1, var2 = 4;
+                    var1 = 2;
+                    dec var3 = 4.3;
+                    var2 = funcion2(var1);
+                }
+            }
+        }
+        else if(azul == 4) {
+
+        }
+        else {
+            int var1 = 3;
+        }
     }
     else if(aa == ab AND rt == "3" OR azul == 3) {
-
+        int ada = 4;
+    }
+    else {
+        int ada = 4;
     }
     while(aa == ab AND rt == "3" OR y == y) {
-
+        int ada = 4;
     }
     iter(y to 100) {
         iter(4 to 1000) {
-            
-        }
-    }
-    /*
-    int x = 3, y = 2;
-    str aa = "hola", ab = "mundo";
-    chr rt = "3";
-    if(azul == 4.3) {
-
-    }
-
-    while(aa == ab AND rt == "3" OR y == y) {
-
-    }
-    iter(y to "azul") {
-        iter(azul to 1000) {
 
         }
-
     }
-    */
+
+    int ada = 4;
+
     return 0;
 }

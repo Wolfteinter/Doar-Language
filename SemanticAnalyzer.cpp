@@ -103,12 +103,14 @@ class Analyzer {
     private:
         vector<string> tokens;
         int cont;
-        bool isThereAnError;
         vector<Function> functions;
         string currentFunction;
         int contIter;
         int contWhile;
         int contIf;
+        int contElseIf;
+        int contElse;
+        int totalErrors;
         map<string, vector<pair<string, string>>> variables;
         vector<pair<string, string>> constants;
     public:
@@ -119,13 +121,14 @@ class Analyzer {
         void displayVariables();
         void displayConstants();
         string getToken();
-        string postGetToken();
+        string getPostToken();
         bool searchVariable(string);
         bool searchConstant(string);
         string searchFunction(Function);
         void addVariable(string, string);
         void addConstant(string, string);
         void addVariablesArgs(vector<pair<string,string>>);
+        void removeVariableSet();
         void checkParamsFunctionCall(vector<pair<string,string>>, string);
         string getTypeVariable(string);
         string getTypeConstant(string);
@@ -184,13 +187,13 @@ class Analyzer {
 Analyzer::Analyzer(vector<string> tokens) {
     this->cont = -1;
     this->tokens = tokens;
-    this->isThereAnError = false;
     this->currentFunction = "global";
     this->contWhile = 0;
     this->contIter = 0;
     this->contIf = 0;
-    vector<pair<string, string>> localVariables;
-    this->variables.insert(pair<string, vector<pair<string, string>>>("global", localVariables));
+    this->contElseIf = 0;
+    this->contElse = 0;
+    this->totalErrors = 0;
 }
 
 // Destructor
@@ -199,6 +202,8 @@ Analyzer::~Analyzer() {
     this->contWhile = 0;
     this->contIter = 0;
     this->contIf = 0;
+    this->contElseIf = 0;
+    this->contElse = 0;
     if(!this->tokens.empty())
         this->tokens.clear();
 }
@@ -245,7 +250,7 @@ string Analyzer::getToken() {
 }
 
 // Utility: Get token in current position [value of cont+1]
-string Analyzer::postGetToken() {
+string Analyzer::getPostToken() {
     if(this->tokens.size() > 0 && this->cont+1 < (int)this->tokens.size())
         return this->tokens[this->cont+1];
     else
@@ -308,7 +313,12 @@ void Analyzer::addVariable(string nameVariable, string type) {
     }
     else {
         pair<string, string>var = make_pair(nameVariable, type);
-        this->variables[this->currentFunction].push_back(var);
+        string hashName = this->currentFunction + "_" + to_string(this->contWhile);
+        hashName += "_" + to_string(this->contIter);
+        hashName += "_" + to_string(this->contIf);
+        hashName += "_" + to_string(this->contElseIf);
+        hashName += "_" + to_string(this->contElse);
+        this->variables[hashName].push_back(var);
     }
 }
 
@@ -325,6 +335,15 @@ void Analyzer::addVariablesArgs(vector<pair<string,string>> params) {
     for (unsigned int i = 0; i < params.size(); i++) {
         addVariable(params[i].first, params[i].second);
     }
+}
+
+void Analyzer::removeVariableSet() {
+    string hashName = this->currentFunction + "_" + to_string(this->contWhile);
+    hashName += "_" + to_string(this->contIter);
+    hashName += "_" + to_string(this->contIf);
+    hashName += "_" + to_string(this->contElseIf);
+    hashName += "_" + to_string(this->contElse);
+    this->variables.erase(hashName);
 }
 
 void Analyzer::checkParamsFunctionCall(vector<pair<string,string>> params, string nameFunction) {
@@ -371,7 +390,8 @@ void Analyzer::program() {
     this->cont++;
     string str = getToken();
     if((int)str[0] == 0) {
-        if(this->isThereAnError) cout << "The compilation has failed" << endl;
+        cout << "Total error(s): " << this->totalErrors << endl;
+        if(this->totalErrors > 0) cout << "The compilation has failed" << endl;
         else cout << "Successful compilation" << endl;
     }
     else {
@@ -402,7 +422,10 @@ bool Analyzer::proposition(){
                 this->cont++;
                 str = getToken();
                 if(str == ")") {
+                    this->contIf++;
                     aux22();
+                    removeVariableSet();
+                    this->contIf--;
                     aux26();
                     aux29();
                 }
@@ -412,8 +435,6 @@ bool Analyzer::proposition(){
         else reportError(15);
     }
     else if(str == "while") {
-        //vector<pair<string, string>>> vars;
-        //string name = "while_" + to_string(this->contWhile);
         this->cont++;
         str = getToken();
         if(str == "(") {
@@ -424,7 +445,10 @@ bool Analyzer::proposition(){
                     this->cont++;
                     str = getToken();
                     if(str == "{") {
+                        this->contWhile++;
                         aux17();
+                        removeVariableSet();
+                        this->contWhile--;
                         this->cont++;
                         str = getToken();
                         if(str != "}") reportError(16);
@@ -451,7 +475,10 @@ bool Analyzer::proposition(){
                             this->cont++;
                             str = getToken();
                             if(str == "{") {
+                                this->contIter++;
                                 aux17();
+                                removeVariableSet();
+                                this->contIter--;
                                 this->cont++;
                                 str = getToken();
                                 if(str != "}") reportError(16);
@@ -537,7 +564,7 @@ bool Analyzer::proposition(){
             if(!searchVariable(nameVariable)) {
                 reportSemanticError(4, nameVariable);
             }
-            nameFunction = postGetToken();
+            nameFunction = getPostToken();
             this->cont += 2;
             str = getToken();
             if(str == "(") {
@@ -578,8 +605,8 @@ bool Analyzer::proposition(){
                     this->cont -= 2;
                     str = getToken();
                     if(str == "=" || str == "+=" || str == "-=" || str == "*=" ||
-                        str == "/=" || str == "%=" || (str == "**" && postGetToken() == "=")
-                        || (str == "_/" && postGetToken() == "=")) {
+                        str == "/=" || str == "%=" || (str == "**" && getPostToken() == "=")
+                        || (str == "_/" && getPostToken() == "=")) {
                         this->cont -= 2;
                         expression();
                     }
@@ -594,8 +621,8 @@ bool Analyzer::proposition(){
         }
         // Simple asigning with expression
         else if(str == "=" || str == "+=" || str == "-=" || str == "*=" ||
-            str == "/=" || str == "%=" || (str == "**" && postGetToken() == "=")
-            || (str == "_/" && postGetToken() == "=")) {
+            str == "/=" || str == "%=" || (str == "**" && getPostToken() == "=")
+            || (str == "_/" && getPostToken() == "=")) {
             this->cont -= 2;
             expression();
         }
@@ -794,7 +821,7 @@ void Analyzer::aux1() {
     if(str == "const") {
         if(aux2()) {
             string type = getToken();
-            string name = postGetToken();
+            string name = getPostToken();
             if(aux3()) {
                 if(aux4(temp)) {
                     if(compareTypes(type, temp, name)) {
@@ -821,7 +848,6 @@ bool Analyzer::aux2() {
     cout<<"---aux2---"<<endl;
     this->cont++;
     string str = getToken();
-    // watch(str);
     if(str == "int" || str == "dec" || str == "bool" || str == "chr" || str == "str")
         return true;
     else {
@@ -834,7 +860,6 @@ bool Analyzer::aux3() {
     cout<<"---aux3---"<<endl;
     this->cont++;
     bool ans = false;
-    //watch(getToken());
     if(sorter() == "identifier") {
         this->cont++;
         string str = getToken();
@@ -865,8 +890,6 @@ void Analyzer::aux6(string type) {
         aux8(specifiedType);
         // check types
         if(specifiedType != "none") {
-            //watch(type);
-            //watch(specifiedType);
             if(compareTypes(type, specifiedType, nameVariable)) {
                 // add global or local variable
                 addVariable(nameVariable, type);
@@ -886,7 +909,6 @@ void Analyzer::aux7(string type) {
     cout<<"---aux7---"<<endl;
     this->cont++;
     string str = getToken();
-    //watch(str);
     if(str == ",") aux6(type);
     else this->cont--;
 }
@@ -895,7 +917,6 @@ void Analyzer::aux8(string &specifiedType) {
     cout<<"---aux8---"<<endl;
     this->cont++;
     string str = getToken();
-    // watch(str);
     if(str == "=") {
         aux4(specifiedType);
     }
@@ -906,7 +927,6 @@ void Analyzer::aux9() {
     cout<<"---aux9---"<<endl;
     this->cont++;
     string str = getToken();
-    //watch(str);
     if(str == "int") { // first of the main function
         this->cont++;
         str = getToken();
@@ -927,7 +947,6 @@ void Analyzer::aux9() {
     }
 
     this->cont--;
-    //watch(getToken());
     string nameFunction;
     string typeOfReturn;
     vector <pair<string, string>> args;
@@ -951,21 +970,17 @@ void Analyzer::aux9() {
                     str = getToken();
                     if(str == ")") {
                         // We add the function
-                        // name, args, type
+                        // name, args, typeOfReturn
                         Function func(nameFunction, args, typeOfReturn);
-                        if(searchFunction(func)=="nonexistent"){
+                        if(searchFunction(func) == "nonexistent") {
                             this->functions.push_back(func);
-                        }else{
-                            reportSemanticError(3,nameFunction);
                         }
-
-                        // We create in variables map the data structure for store
-                        // local variables.
-                        vector<pair<string, string>> localVariables;
-                        this->variables.insert(pair<string, vector<pair<string, string>>>(nameFunction, localVariables));
+                        else {
+                            reportSemanticError(3, nameFunction);
+                        }
                         // Save name of current function
                         this->currentFunction = nameFunction;
-                        // Update local variables
+                        // Update local variables (args in function)
                         addVariablesArgs(args);
                         this->cont++;
                         str = getToken();
@@ -983,7 +998,7 @@ void Analyzer::aux9() {
                             str = getToken();
                             if(str == "}") {
                                 // Remove local variables
-                                this->variables.erase(this->currentFunction);
+                                removeVariableSet();
                                 this->currentFunction = "global";
                                 aux9();
                             }
@@ -1013,7 +1028,7 @@ void Analyzer::aux9() {
 
 void Analyzer::aux10(vector <pair<string, string>> &params) {
     cout<<"---aux10---"<<endl;
-    if(postGetToken() != ")") {
+    if(getPostToken() != ")") {
         if(aux2()) {
             params.push_back(make_pair("none", getToken()));
             this->cont++;
@@ -1045,7 +1060,6 @@ void Analyzer::aux13() {
     cout<<"---aux13---"<<endl;
     this->cont++;
     string str = getToken();
-    //watch(str);
     if(str != "return" && str != "}") {
         this->cont--;
         aux12();
@@ -1113,6 +1127,10 @@ void Analyzer::aux16() {
                             this->cont++;
                             str = getToken();
                             if(str != "}") reportError(16);
+                            else {
+                                removeVariableSet();
+                                this->currentFunction = "global";
+                            }
                         }
                         else reportError(3);
                     }
@@ -1244,16 +1262,8 @@ void Analyzer::aux26() {
     cout<<"---aux26---"<<endl;
     this->cont++;
     string str = getToken();
-    // Aquí hay un detalle, ya los follow de aux26 incluyen el 'else' y en
-    // aux26, cuando no se omite, comienza con 'else if'.
-    // Para solucionarlo, se lee un siguiente token, para comprobar si es if
-    /*
-    if((str != "else" || (str == "else" && str2 == "if")) && str != "int" &&
-        str != "dec" && str != "bool" && str != "chr" && str != "str" &&
-        type != "identifier" && str != "if" && str != "while" && str != "iter"
-        && str != "return" && str != "}") {
-    */
-    if(str == "else" && postGetToken() == "if"){
+
+    if(str == "else" && getPostToken() == "if"){
         this->cont += 2;
         str = getToken();
         if(str == "(") {
@@ -1261,7 +1271,10 @@ void Analyzer::aux26() {
                 this->cont++;
                 str = getToken();
                 if(str == ")") {
+                    this->contElseIf++;
                     aux22();
+                    removeVariableSet();
+                    this->contElseIf--;
                     aux28();
                 }
                 else reportError(15);
@@ -1313,7 +1326,10 @@ void Analyzer::aux30() {
         str != "str" && type != "identifier" && str != "if" && str != "while"
         && str != "iter" && str != "return" && str != "}") {
         if(str == "{") {
+            this->contElse++;
             aux17();
+            removeVariableSet();
+            this->contElse--;
             this->cont++;
             str = getToken();
             if(str != "}") reportError(16);
@@ -1359,12 +1375,12 @@ bool Analyzer::aux32() {
     this->cont++;
     string str = getToken();
     if(str != "=" && str != "+=" && str != "-=" && str != "*=" && str != "/=" &&
-        str != "%=" && (str != "**" && postGetToken() != "=") && (str != "_/" && postGetToken() != "=")) {
+        str != "%=" && (str != "**" && getPostToken() != "=") && (str != "_/" && getPostToken() != "=")) {
         ans = false;
     }
 
-    if((str == "**" && postGetToken() == "=") ||
-        (str == "_/" && postGetToken() == "=")) {
+    if((str == "**" && getPostToken() == "=") ||
+        (str == "_/" && getPostToken() == "=")) {
         this->cont++;
     }
     return ans;
@@ -1436,7 +1452,7 @@ bool Analyzer::aux37() {
 }
 
 void Analyzer::reportError(int codeError) {
-    this->isThereAnError = true;
+    this->totalErrors++;
     switch (codeError) {
         case 0:
             cout << "Unexpected symbol in EOF." << endl;
@@ -1513,7 +1529,7 @@ void Analyzer::reportError(int codeError) {
 }
 
 void Analyzer::reportSemanticError(int codeError, string message) {
-    this->isThereAnError = true;
+    this->totalErrors++;
     switch (codeError) {
         case 1:
             cout << "The return type doesn't match in function '" << message << "'" <<  endl;
@@ -1568,18 +1584,6 @@ int main() {
     //analyzer.displayFunctions();
     //analyzer.displayVariables();
     //analyzer.displayConstants();
-    /*
-    vector <Function> functions = analyzer.getFunctions();
-    vector<pair<string, string>> params;
-    params.push_back(make_pair("uno", "int"));
-    params.push_back(make_pair("rx", "int"));
-    Function aux("funcion1", params, "int");
-    functions.push_back(aux);
-
-    for (unsigned int i = 0; i < functions.size(); i++) {
-        cout << analyzer.searchFunction(functions[i]) << endl;
-    }
-    */
     // Now, we will remove the temporary file
     remove(("temp_"+fileName).c_str());
     return 0;
