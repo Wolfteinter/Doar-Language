@@ -6,8 +6,8 @@
 #include <algorithm>
 #include <map>
 #include <iterator>
-#include "Extractor.cpp"
-#include "Preprocessor.cpp"
+//#include "Extractor.cpp"
+//#include "Preprocessor.cpp"
 
 #define watch(x) cout << (#x) << " is " << (x) << endl;
 
@@ -1571,7 +1571,7 @@ void Analyzer::reportSemanticError(int codeError, string message) {
             cout << "";
     }
 }
-
+/*
 int main() {
     string fileName = "code.doa";
     Extractor extractor(Preprocessor::preprocessFile(fileName));
@@ -1588,3 +1588,4 @@ int main() {
     remove(("temp_"+fileName).c_str());
     return 0;
 }
+*/

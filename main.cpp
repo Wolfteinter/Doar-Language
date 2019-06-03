@@ -1,8 +1,8 @@
 /*
 Equipo: David Betancourt Montellano, Onder Francisco Campos Garcia.
 Núm. lista: 3 , 5.
-Fecha: Mayo del 2019
-Evidencia: Analizador sintáctico.
+Fecha: Junio del 2019
+Evidencia: Analizador semántico
 Docente: Karina Rodríguez Mejía.
 Programa académico: Ingeniería en sistemas computacionales.
 Unidad de aprendizaje: Compiladores.
@@ -14,7 +14,7 @@ Para más información revisar 'Instructions.txt'.
 #include "Extractor.cpp"
 #include "LexicoAnalysis.cpp"
 #include "Preprocessor.cpp"
-#include "SyntacticAnalyzer.c++"
+#include "SemanticAnalyzer.cpp"
 
 using namespace std;
 
@@ -34,8 +34,7 @@ int main() {
         }
     }
     else {
-        // cout << "There are no errors" << endl;
-
+        // Syntactic analysis and semantic analysis
         Analyzer analyzer(ans);
         analyzer.program();
     }

@@ -985,8 +985,8 @@ int main() {
     for(unsigned int i = 0;i < ans.size();i++){
         cout<<ans[i]<<endl;
     }
-    Analyzer analyzer(ans);
-    analyzer.program();
+    Analyzer Analyzer(ans);
+    Analyzer.program();
     // Now, we will remove the temporary file
     remove(("temp_"+fileName).c_str());
     return 0;

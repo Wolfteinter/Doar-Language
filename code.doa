@@ -72,7 +72,7 @@ int def main() {
     while(aa == ab AND rt == "3" OR y == y) {
         int ada = 4;
     }
-    iter(y to 100) {
+    iter(y to 56) {
         iter(4 to 1000) {
 
         }
