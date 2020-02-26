@@ -5,7 +5,7 @@
     - You can modify this file for testing or
     - You can change the following line in 'main.cpp':
         -- string fileName = "code.doa";
-        Example: string fileName = "otherCode.txt";
+        Example: string fileName = "otherCode.doa";
 
 3) We recommend to compile with: g++ -std=c++11 main.cpp -o main
 
